@@ -20,21 +20,41 @@ docker run -p 8082:8085 --net=mynet --ip=10.10.0.2 --name="node1" -e SOCKET_ADDR
 
 docker run -p 8083:8085 --net=mynet --ip=10.10.0.3 --name="node2" -e SOCKET_ADDRESS="10.10.0.3:8085" -e VIEW="10.10.0.2:8085,10.10.0.3:8085,10.10.0.4:8085,10.10.0.5:8085,10.10.0.6:8085,10.10.0.7:8085" -e SHARD_COUNT="2" KV-img
 
-docker run -p 8084:8085 --net=mynet --ip=10.10.0.4 --name="node3" -e SOCKET_ADDRESS="10.10.0.4:8085" -e
-VIEW="10.10.0.2:8085,10.10.0.3:8085,10.10.0.4:8085,10.10.0.5:8085,10.10.0.6:8085,10.10.0.7:8085" -e SHARD_COUNT="2" KV-img
+docker run -p 8084:8085 --net=mynet --ip=10.10.0.4 --name="node3" -e SOCKET_ADDRESS="10.10.0.4:8085" -e VIEW="10.10.0.2:8085,10.10.0.3:8085,10.10.0.4:8085,10.10.0.5:8085,10.10.0.6:8085,10.10.0.7:8085" -e SHARD_COUNT="2" KV-img
 
-docker run -p 8086:8085 --net=mynet --ip=10.10.0.5 --name="node4" -e SOCKET_ADDRESS="10.10.0.5:8085" -e
-VIEW="10.10.0.2:8085,10.10.0.3:8085,10.10.0.4:8085,10.10.0.5:8085,10.10.0.6:8085,10.10.0.7:8085" -e SHARD_COUNT="2" KV-img
+docker run -p 8086:8085 --net=mynet --ip=10.10.0.5 --name="node4" -e SOCKET_ADDRESS="10.10.0.5:8085" -e VIEW="10.10.0.2:8085,10.10.0.3:8085,10.10.0.4:8085,10.10.0.5:8085,10.10.0.6:8085,10.10.0.7:8085" -e SHARD_COUNT="2" KV-img
 
-docker run -p 8087:8085 --net=mynet --ip=10.10.0.6 --name="node5" -e SOCKET_ADDRESS="10.10.0.6:8085" -e
-VIEW="10.10.0.2:8085,10.10.0.3:8085,10.10.0.4:8085,10.10.0.5:8085,10.10.0.6:8085,10.10.0.7:8085" -e SHARD_COUNT="2" KV-img
+docker run -p 8087:8085 --net=mynet --ip=10.10.0.6 --name="node5" -e SOCKET_ADDRESS="10.10.0.6:8085" -e VIEW="10.10.0.2:8085,10.10.0.3:8085,10.10.0.4:8085,10.10.0.5:8085,10.10.0.6:8085,10.10.0.7:8085" -e SHARD_COUNT="2" KV-img
 
-docker run -p 8088:8085 --net=mynet --ip=10.10.0.7 --name="node6" -e SOCKET_ADDRESS="10.10.0.7:8085" -e
-VIEW="10.10.0.2:8085,10.10.0.3:8085,10.10.0.4:8085,10.10.0.5:8085,10.10.0.6:8085,10.10.0.7:8085" -e SHARD_COUNT="2" KV-img
+docker run -p 8088:8085 --net=mynet --ip=10.10.0.7 --name="node6" -e SOCKET_ADDRESS="10.10.0.7:8085" -e VIEW="10.10.0.2:8085,10.10.0.3:8085,10.10.0.4:8085,10.10.0.5:8085,10.10.0.6:8085,10.10.0.7:8085" -e SHARD_COUNT="2" KV-img
 ~~~
 
 # Requests it supports
 
 ## GET Requests:
--$ curl --request GET --header "Content-Type: application/json" --write-out "\n%{http_code}\n" http://<node-socket-address>/key-value-store/<key>
+Get the IDs of all shards in the store
+~~~bash
+curl --request GET --header "Content-Type: application/json" --write-out "\n%{http_code}\n" http://<node-socket-address>/key-value-store-shard/shard-ids
+~~~
+Get the shard ID of a node
+~~~bash
+curl --request GET --header "Content-Type: application/json" --write-out "\n%{http_code}\n" http://<node-socket-address>/key-value-store-shard/node-shard-id
+~~~
+Get the members of a shard with a given ID
+~~~bash
+curl --request GET --header "Content-Type: application/json" --write-out "\n%{http_code}\n" http://<node-socket-address>/key-value-store-shard/shard-id-members/<shard-id>
+~~~
+Get the number of keys stored in a shard
+~~~bash
+curl --request GET --header "Content-Type: application/json" --write-out "\n%{http_code}\n" http://<node-socket-address>/key-value-store-shard/shard-id-key-count/<shard-id>
+~~~
+Get a key from the store
+~~~bash
+curl --request GET --header "Content-Type: application/json" --write-out "\n%{http_code}\n" http://<node-socket-address>/key-value-store/<key>
+~~~
+
+Get the current View of the Store
+~~~bash
+curl --request GET --header "Content-Type: application/json" --write-out "\n%{http_code}\n" http://<node-socket-address>/key-value-store-view
+~~~
  
