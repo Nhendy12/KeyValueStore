@@ -32,6 +32,7 @@ docker run -p 8088:8085 --net=mynet --ip=10.10.0.7 --name="node6" -e SOCKET_ADDR
 # Requests it supports
 
 ## GET Requests:
+
 Get the IDs of all shards in the store
 ~~~bash
 curl --request GET --header "Content-Type: application/json" --write-out "\n%{http_code}\n" http://<node-socket-address>/key-value-store-shard/shard-ids
@@ -58,3 +59,31 @@ Get the current View of the Store
 curl --request GET --header "Content-Type: application/json" --write-out "\n%{http_code}\n" http://<node-socket-address>/key-value-store-view
 ~~~
  
+## PUT Requests:
+
+Add a node to a shard
+~~~bash
+curl --request PUT --header "Content-Type: application/json" --write-out "\n%{http_code}\n" --data '{"socket-address": <new-node-socket-address>}' http://<node-socket-address>/key-value-store-shard/add-member/<shard-id>
+~~~
+
+Resharding the key-value store
+~~~bash
+curl --request PUT --header "Content-Type: application/json" --write-out "\n%{http_code}\n" --data '{"shard-count": <shard-count> }' http://<node-socket-address>/key-value-store-shard/reshard
+~~~
+
+Put a new view into the store
+~~~bash
+curl --request PUT --header "Content-Type: application/json" --write-out "\n%{http_code}\n" --data '{"socket-address": <new-node-socket-address> }' http://<node-socket-address>/key-value-store-view
+ ~~~
+ 
+ Put a new key into the store
+ ~~~bash
+ curl --request PUT --header "Content-Type: application/json" --write-out "\n%{http_code}\n" --data '{"value": "<value>", "causal-metadata": <this-operation-causal-metadata>}' http://<node-socket-address>/key-value-store/<key>
+~~~
+
+## Delete Requests:
+
+Delete a key in the store
+ ~~~bash
+curl --request DELETE --header "Content-Type: application/json" --write-out "\n%{http_code}\n" --data '{"causal-metadata": "<V4>"}' http://<node-socket-address>/key-value-store/<key>
+~~~
